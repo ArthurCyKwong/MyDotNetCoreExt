@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DateExt", "DateExt\DateExt.csproj", "{9EFFE0F2-2BAE-43A4-9C21-7A5212F35444}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EfCoreLinqExt", "EfCoreLinqExt\EfCoreLinqExt.csproj", "{99197018-2AF2-4B73-8394-6BFFC640AD46}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskExt", "TaskExt\TaskExt.csproj", "{1E237546-21A0-46A6-9F14-B9CCAEE77FE9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnumerableExt", "EnumerableExt\EnumerableExt.csproj", "{BB2953DF-8FEB-4BEC-86CC-F95B9B64CCDD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShutdownServiceExt", "ShutdownServiceExt\ShutdownServiceExt.csproj", "{A454FBB0-EFEC-48C3-AB8F-DB83B319B8E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serilog.ApplicationInsightsExt", "Serilog.ApplicationInsightsExt\Serilog.ApplicationInsightsExt.csproj", "{701BF1B7-2141-4927-ADBA-D9BDC56514FD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9EFFE0F2-2BAE-43A4-9C21-7A5212F35444}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EFFE0F2-2BAE-43A4-9C21-7A5212F35444}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EFFE0F2-2BAE-43A4-9C21-7A5212F35444}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EFFE0F2-2BAE-43A4-9C21-7A5212F35444}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99197018-2AF2-4B73-8394-6BFFC640AD46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99197018-2AF2-4B73-8394-6BFFC640AD46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99197018-2AF2-4B73-8394-6BFFC640AD46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99197018-2AF2-4B73-8394-6BFFC640AD46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E237546-21A0-46A6-9F14-B9CCAEE77FE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E237546-21A0-46A6-9F14-B9CCAEE77FE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E237546-21A0-46A6-9F14-B9CCAEE77FE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E237546-21A0-46A6-9F14-B9CCAEE77FE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB2953DF-8FEB-4BEC-86CC-F95B9B64CCDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB2953DF-8FEB-4BEC-86CC-F95B9B64CCDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB2953DF-8FEB-4BEC-86CC-F95B9B64CCDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB2953DF-8FEB-4BEC-86CC-F95B9B64CCDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A454FBB0-EFEC-48C3-AB8F-DB83B319B8E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A454FBB0-EFEC-48C3-AB8F-DB83B319B8E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A454FBB0-EFEC-48C3-AB8F-DB83B319B8E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A454FBB0-EFEC-48C3-AB8F-DB83B319B8E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{701BF1B7-2141-4927-ADBA-D9BDC56514FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{701BF1B7-2141-4927-ADBA-D9BDC56514FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{701BF1B7-2141-4927-ADBA-D9BDC56514FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{701BF1B7-2141-4927-ADBA-D9BDC56514FD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3EA21AD5-5F3E-4F92-BEF0-089050C1D4DC}
+	EndGlobalSection
+EndGlobal
