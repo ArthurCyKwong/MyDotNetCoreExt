@@ -25,6 +25,7 @@ public class ShutdownService : IHostedService
         _logger.LogInformation(" Shutdown Service: Start Async ....");
 
         var StartupTask = Task.WhenAll(ShutdownService.StartUptaskList.ToArray());
+        ShutdownService.StartUptaskList.ForEach(x=>x.Start());
         try
         {
             await StartupTask;
