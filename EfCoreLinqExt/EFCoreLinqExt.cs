@@ -78,10 +78,52 @@ public static partial class EFCoreLinqExt
 
         return result;
     }
-
-    public static IEnumerable<IQueryable<TSource>> GeneralQuery<TSource, TFilter>(this IEnumerable<IQueryable<TSource>> queryList, TFilter filter, ExpressionType expressionType, Expression<Func<TSource, TFilter>> fieldSelector)
+    public static IEnumerable<IQueryable<TSource>> IsNull<TSource, TFilter>(this IEnumerable<IQueryable<TSource>> queryList, bool isNull, Expression<Func<TSource, TFilter>> fieldSelector)
     {
         //FieldSelector
+        MemberExpression body = fieldSelector.Body as MemberExpression;
+        if (body == null) return queryList;
+
+        ParameterExpression paramSource = Expression.Parameter(typeof(TSource), "field");
+        Expression DataSelectionExpression = Expression.PropertyOrField(paramSource, body.Member.Name);
+
+        // Filter Value Expression
+        Expression paramFilter = Expression.Constant(null, typeof(TFilter));
+        Expression expression = Expression.MakeBinary(isNull ? ExpressionType.Equal : ExpressionType.NotEqual, paramFilter, DataSelectionExpression);
+
+        return queryList.Select(x => x.Where(Expression.Lambda<Func<TSource, bool>>(expression, paramSource)));
+    }
+
+    private static IEnumerable<IQueryable<TSource>> GeneralQuery<TSource>(this IEnumerable<IQueryable<TSource>> queryList, string? filter, ExpressionType expressionType, Expression<Func<TSource, string?>> fieldSelector)
+    {
+        switch (expressionType)
+        {
+            case ExpressionType.GreaterThan:
+            case ExpressionType.GreaterThanOrEqual:
+            case ExpressionType.LessThanOrEqual:
+            case ExpressionType.LessThan:
+                // Field Selector
+                MemberExpression body = fieldSelector.Body as MemberExpression;
+                if (body == null) return queryList;
+
+                ParameterExpression paramSource = Expression.Parameter(typeof(TSource), "field");
+                Expression DataselectExpression = Expression.PropertyOrField(paramSource, body.Member.Name);
+                var CompareMethod = typeof(string).GetMethod("CompareTo",new[]{typeof(string)});
+                Expression paramFilter = Expression.Constant(filter, typeof(string));
+                MethodCallExpression method = Expression.Call(paramFilter, CompareMethod, DataselectExpression);
+
+                Expression Zero = Expression.Constant(0, typeof(int));
+                Expression expression = Expression.MakeBinary(expressionType, method, Zero);
+
+                return queryList.Select(x=>x.Where(Expression.Lambda<Func<TSource, bool>>(expression, paramSource)));
+                break;
+            default:
+                return queryList.GeneralQuery<TSource, string?>(filter, expressionType, fieldSelector);
+        }
+    }
+    public static IEnumerable<IQueryable<TSource>> GeneralQuery<TSource, TFilter>(this IEnumerable<IQueryable<TSource>> queryList, TFilter filter, ExpressionType expressionType, Expression<Func<TSource, TFilter>> fieldSelector)
+    {
+       //FieldSelector
         MemberExpression body = fieldSelector.Body as MemberExpression;
         if (body == null) return queryList;
 
@@ -94,7 +136,6 @@ public static partial class EFCoreLinqExt
 
         return queryList.Select(x => x.Where(Expression.Lambda<Func<TSource, bool>>(expression, paramSource)));
     }
-
     public static IEnumerable<IQueryable<TSource>> Include<TSource, TProperties>(this IEnumerable<IQueryable<TSource>> queryList, Expression<Func<TSource, TProperties>> includeField) where TSource : class
     {
         return queryList.Select(x => x.Include(includeField));
@@ -102,5 +143,60 @@ public static partial class EFCoreLinqExt
     public static IEnumerable<IQueryable<TSource>> Where<TSource>(this IEnumerable<IQueryable<TSource>> queryList, Expression<Func<TSource, bool>> whereClause)
     {
         return queryList.Select(x => x.Where(whereClause));
+    }
+    public static IEnumerable<IQueryable<TSource>> Filter<TSource>(this IEnumerable<IQueryable<TSource>> queryList, Expression<Func<TSource, string?>> fieldSelector, EFCoreFilter<string?> filter)
+    {
+        if (!(filter.GreaterThan is null))
+            queryList = queryList.GeneralQuery(filter.GreaterThan, ExpressionType.LessThan, fieldSelector);
+        if (!(filter.GreaterThanOrEqual is null))
+            queryList = queryList.GeneralQuery(filter.GreaterThanOrEqual, ExpressionType.LessThanOrEqual, fieldSelector);
+        if (!(filter.LessThan is null))
+            queryList = queryList.GeneralQuery(filter.LessThan, ExpressionType.GreaterThan, fieldSelector);
+        if (!(filter.LessThanOrEqual is null))
+            queryList = queryList.GeneralQuery(filter.LessThanOrEqual, ExpressionType.GreaterThanOrEqual, fieldSelector);
+        if (!(filter.Equal is null))
+            queryList = queryList.GeneralQuery(filter.Equal, ExpressionType.Equal, fieldSelector);
+        if (!filter.In.IsNullOrEmpty())
+            queryList = queryList.InList(filter.In, fieldSelector);
+        if (filter.isNull.HasValue)
+            queryList = queryList.IsNull(filter.isNull.Value, fieldSelector);
+        return queryList;
+    }
+    public static IEnumerable<IQueryable<TSource>> Filter<TSource, TFilter>(this IEnumerable<IQueryable<TSource>> queryList, Expression<Func<TSource, TFilter>> fieldSelector, EFCoreFilter<TFilter> filter)
+    {
+        if (!(filter.GreaterThan is null))
+            queryList = queryList.GeneralQuery(filter.GreaterThan, ExpressionType.LessThan, fieldSelector);
+        if (!(filter.GreaterThanOrEqual is null))
+            queryList = queryList.GeneralQuery(filter.GreaterThanOrEqual, ExpressionType.LessThanOrEqual, fieldSelector);
+        if (!(filter.LessThan is null))
+            queryList = queryList.GeneralQuery(filter.LessThan, ExpressionType.GreaterThan, fieldSelector);
+        if (!(filter.LessThanOrEqual is null))
+            queryList = queryList.GeneralQuery(filter.LessThanOrEqual, ExpressionType.GreaterThanOrEqual, fieldSelector);
+        if (!(filter.Equal is null))
+            queryList = queryList.GeneralQuery(filter.Equal, ExpressionType.Equal, fieldSelector);
+        if (!filter.In.IsNullOrEmpty())
+            queryList = queryList.InList(filter.In, fieldSelector);
+        if (filter.isNull.HasValue)
+            queryList = queryList.IsNull(filter.isNull.Value, fieldSelector);
+        return queryList;
+    }
+
+    public static IEnumerable<IQueryable<TSource>> Filter<TSource, TFilter>(this IEnumerable<IQueryable<TSource>> queryList, Expression<Func<TSource, TFilter>> fieldSelector, NullableEFCoreFilter<TFilter> filter) where TFilter : struct
+    {
+        if (!(filter.GreaterThan is null))
+            queryList = queryList.GeneralQuery(filter.GreaterThan.Value, ExpressionType.LessThan, fieldSelector);
+        if (!(filter.GreaterThanOrEqual is null))
+            queryList = queryList.GeneralQuery(filter.GreaterThanOrEqual.Value, ExpressionType.LessThanOrEqual, fieldSelector);
+        if (!(filter.LessThan is null))
+            queryList = queryList.GeneralQuery(filter.LessThan.Value, ExpressionType.GreaterThan, fieldSelector);
+        if (!(filter.LessThanOrEqual is null))
+            queryList = queryList.GeneralQuery(filter.LessThanOrEqual.Value, ExpressionType.GreaterThanOrEqual, fieldSelector);
+        if (!(filter.Equal is null))
+            queryList = queryList.GeneralQuery(filter.Equal.Value, ExpressionType.Equal, fieldSelector);
+        if (!filter.In.IsNullOrEmpty())
+            queryList = queryList.InList(filter.In.Select(x => x.Value), fieldSelector);
+        if (filter.isNull.HasValue)
+            queryList = queryList.IsNull(filter.isNull.Value, fieldSelector);
+        return queryList;
     }
 }
