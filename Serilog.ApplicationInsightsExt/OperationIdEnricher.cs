@@ -16,5 +16,8 @@ public class OperationIdEnricher : ILogEventEnricher
 
         logEvent.AddPropertyIfAbsent(new LogEventProperty("Operation Id", new ScalarValue(operationId)));
         logEvent.AddPropertyIfAbsent(new LogEventProperty("Parent Id", new ScalarValue(parentId)));
+
+        logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("OperationId", new ScalarValue(operationId)));
+        logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("ParentId", new ScalarValue(parentId)));
     }
 }
